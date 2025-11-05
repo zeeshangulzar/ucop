@@ -1,7 +1,11 @@
 <div class="container">
   <div class="header-section">
-    <h1>🏥 AI Smart Intake - Medical Referral Processor</h1>
-    <p class="subtitle">Upload PDF, JPG, PNG, or email referrals for AI-powered data extraction</p>
+    <div style="margin-bottom: 15px;">
+      <%= image_tag "revenue_rise_logo.png", alt: "Revenue Rise Solutions", class: "logo" %>
+      <h1>Revenue Rise Solutions</h1>
+    </div>
+    <p class="subtitle">AI Smart Intake - Medical Referral Processor</p>
+    <p style="color: #707070; font-size: 0.95rem; margin-top: 10px;">Upload PDF, JPG, PNG, or email referrals for AI-powered data extraction</p>
   </div>
 
   <% if flash[:error] %>
@@ -27,32 +31,6 @@
       <%= f.submit "Extract Data with OCR", class: "btn btn-primary" %>
     <% end %>
   </div>
-
-  <div class="info-section">
-    <h3>📋 What We Extract (Phase 1 - OCR)</h3>
-    <ul>
-      <li>✓ All text content from documents</li>
-      <li>✓ Text from scanned PDFs using OCR</li>
-      <li>✓ Text from images (JPG, PNG, TIFF)</li>
-    </ul>
-
-    <h3>🤖 AI-Powered Smart Extraction</h3>
-    <p style="color: #6366f1; font-weight: 600; margin-bottom: 15px;">Powered by OpenAI GPT-4o (Enhanced Accuracy)</p>
-    <ul>
-      <li>✅ Patient Name</li>
-      <li>✅ Date of Birth (DOB)</li>
-      <li>✅ Phone Number & Email</li>
-      <li>✅ Insurance Information</li>
-      <li>✅ Referring Provider</li>
-      <li>✅ Referral Reason</li>
-      <li>✅ Notes and Comments</li>
-      <li>✅ Confidence Scoring</li>
-    </ul>
-    <p class="ai-note">
-      <strong>🚀 AI Mode Active:</strong> Set your <code>OPENAI_API_KEY</code> environment variable for intelligent field extraction. 
-      <br><small>Automatic fallback to pattern matching if API is unavailable.</small>
-    </p>
-  </div>
 </div>
 
 <script>
@@ -61,166 +39,3 @@
     document.getElementById('file-name').textContent = fileName;
   });
 </script>
-
-<style>
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-
-  .header-section {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .header-section h1 {
-    font-size: 2.5rem;
-    color: #2563eb;
-    margin-bottom: 10px;
-  }
-
-  .subtitle {
-    font-size: 1.1rem;
-    color: #64748b;
-  }
-
-  .upload-card {
-    background: white;
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .upload-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-  }
-
-  .upload-card h2 {
-    font-size: 1.8rem;
-    color: #1e293b;
-    margin-bottom: 10px;
-  }
-
-  .upload-card p {
-    color: #64748b;
-    margin-bottom: 30px;
-  }
-
-  .upload-form {
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  .file-input-wrapper {
-    margin-bottom: 20px;
-  }
-
-  .file-input {
-    display: none;
-  }
-
-  .file-label {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    cursor: pointer;
-  }
-
-  .file-label-text {
-    display: inline-block;
-    padding: 12px 30px;
-    background: #e0e7ff;
-    color: #3730a3;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: background 0.3s;
-  }
-
-  .file-label-text:hover {
-    background: #c7d2fe;
-  }
-
-  .file-name {
-    font-size: 0.9rem;
-    color: #64748b;
-    font-style: italic;
-  }
-
-  .btn {
-    padding: 14px 40px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    width: 100%;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
-  }
-
-  .info-section {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 30px;
-  }
-
-  .info-section h3 {
-    color: #1e293b;
-    margin-bottom: 15px;
-    font-size: 1.3rem;
-  }
-
-  .info-section ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  .info-section li {
-    padding: 8px 0;
-    color: #475569;
-    font-size: 1rem;
-  }
-
-  .ai-note {
-    margin-top: 15px;
-    padding: 15px;
-    background: #dbeafe;
-    border-left: 4px solid #3b82f6;
-    border-radius: 6px;
-    color: #1e40af;
-  }
-
-  .ai-note code {
-    background: #1e293b;
-    color: #22d3ee;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 0.9em;
-  }
-
-  .alert {
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-
-  .alert-error {
-    background: #fee2e2;
-    color: #991b1b;
-    border-left: 4px solid #dc2626;
-  }
-</style>

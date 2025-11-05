@@ -149,7 +149,7 @@ class AiFieldExtractorService
       referral_reason: extract_pattern(/(?:reason|diagnosis|complaint):\s*([A-Za-z\s,\.]+)/i),
       notes_comments: extract_pattern(/(?:notes|comments|remarks):\s*([A-Za-z\s,\.]+)/i),
       confidence: "low",
-      extraction_notes: "Basic pattern matching used (no AI). Results may be incomplete. Configure OPENAI_API_KEY for better extraction.",
+      extraction_notes: "Basic pattern matching used (no AI). Results may be incomplete.",
       ai_used: false
     }
   end
