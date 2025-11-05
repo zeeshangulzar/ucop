@@ -15,7 +15,7 @@
     <h2>Upload Referral Document</h2>
     <p>Supported formats: PDF, JPG, PNG, TIFF</p>
 
-    <%= form_with url: extract_referrals_path, method: :post, multipart: true, class: "upload-form" do |f| %>
+    <%= form_with url: extract_referrals_path, method: :post, multipart: true, class: "upload-form", data: { turbo: false } do |f| %>
       <div class="file-input-wrapper">
         <%= f.file_field :file, accept: "application/pdf,image/*", required: true, class: "file-input", id: "file-input" %>
         <label for="file-input" class="file-label">
@@ -36,16 +36,22 @@
       <li>✓ Text from images (JPG, PNG, TIFF)</li>
     </ul>
 
-    <h3>🤖 Coming Soon (Phase 2 - AI Intelligence)</h3>
+    <h3>🤖 AI-Powered Smart Extraction</h3>
+    <p style="color: #6366f1; font-weight: 600; margin-bottom: 15px;">Powered by OpenAI GPT-4o (Enhanced Accuracy)</p>
     <ul>
-      <li>⏳ Patient Name</li>
-      <li>⏳ Date of Birth (DOB)</li>
-      <li>⏳ Phone Number & Email</li>
-      <li>⏳ Insurance Information</li>
-      <li>⏳ Referring Provider</li>
-      <li>⏳ Referral Reason</li>
-      <li>⏳ Notes and Comments</li>
+      <li>✅ Patient Name</li>
+      <li>✅ Date of Birth (DOB)</li>
+      <li>✅ Phone Number & Email</li>
+      <li>✅ Insurance Information</li>
+      <li>✅ Referring Provider</li>
+      <li>✅ Referral Reason</li>
+      <li>✅ Notes and Comments</li>
+      <li>✅ Confidence Scoring</li>
     </ul>
+    <p class="ai-note">
+      <strong>🚀 AI Mode Active:</strong> Set your <code>OPENAI_API_KEY</code> environment variable for intelligent field extraction. 
+      <br><small>Automatic fallback to pattern matching if API is unavailable.</small>
+    </p>
   </div>
 </div>
 
@@ -189,6 +195,23 @@
     font-size: 1rem;
   }
 
+  .ai-note {
+    margin-top: 15px;
+    padding: 15px;
+    background: #dbeafe;
+    border-left: 4px solid #3b82f6;
+    border-radius: 6px;
+    color: #1e40af;
+  }
+
+  .ai-note code {
+    background: #1e293b;
+    color: #22d3ee;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+
   .alert {
     padding: 15px 20px;
     border-radius: 8px;
@@ -201,4 +224,3 @@
     border-left: 4px solid #dc2626;
   }
 </style>
-

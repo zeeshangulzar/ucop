@@ -34,52 +34,80 @@
     </div>
   </div>
 
-  <div class="phase2-preview">
-    <h3>🤖 Phase 2 Preview - AI Smart Extraction</h3>
-    <p><em>In the next phase, AI will automatically extract structured data from this text:</em></p>
+  <div class="ai-extraction-section">
+    <div class="section-header">
+      <h3>🤖 AI Smart Extraction - Structured Medical Data</h3>
+      <% if @extracted_fields[:ai_used] %>
+        <span class="badge badge-ai">✨ AI-Powered</span>
+      <% else %>
+        <span class="badge badge-basic">⚡ Basic Extraction</span>
+      <% end %>
+    </div>
+    
+    <% if @extracted_fields[:extraction_notes].present? %>
+      <div class="extraction-notes">
+        <strong>ℹ️ Note:</strong> <%= @extracted_fields[:extraction_notes] %>
+      </div>
+    <% end %>
     
     <div class="fields-grid">
-      <div class="field-placeholder">
+      <div class="field-card <%= field_status(@extracted_fields[:patient_name]) %>">
         <div class="field-icon">👤</div>
         <div class="field-name">Patient Name</div>
-        <div class="field-value">Coming soon...</div>
+        <div class="field-value"><%= display_field(@extracted_fields[:patient_name]) %></div>
       </div>
-      <div class="field-placeholder">
+      
+      <div class="field-card <%= field_status(@extracted_fields[:date_of_birth]) %>">
         <div class="field-icon">🎂</div>
         <div class="field-name">Date of Birth</div>
-        <div class="field-value">Coming soon...</div>
+        <div class="field-value"><%= display_field(@extracted_fields[:date_of_birth]) %></div>
       </div>
-      <div class="field-placeholder">
+      
+      <div class="field-card <%= field_status(@extracted_fields[:phone_number]) %>">
         <div class="field-icon">📞</div>
         <div class="field-name">Phone Number</div>
-        <div class="field-value">Coming soon...</div>
+        <div class="field-value"><%= display_field(@extracted_fields[:phone_number]) %></div>
       </div>
-      <div class="field-placeholder">
+      
+      <div class="field-card <%= field_status(@extracted_fields[:email_address]) %>">
         <div class="field-icon">📧</div>
         <div class="field-name">Email Address</div>
-        <div class="field-value">Coming soon...</div>
+        <div class="field-value"><%= display_field(@extracted_fields[:email_address]) %></div>
       </div>
-      <div class="field-placeholder">
+      
+      <div class="field-card <%= field_status(@extracted_fields[:insurance]) %>">
         <div class="field-icon">🏥</div>
         <div class="field-name">Insurance</div>
-        <div class="field-value">Coming soon...</div>
+        <div class="field-value"><%= display_field(@extracted_fields[:insurance]) %></div>
       </div>
-      <div class="field-placeholder">
+      
+      <div class="field-card <%= field_status(@extracted_fields[:referring_provider]) %>">
         <div class="field-icon">👨‍⚕️</div>
         <div class="field-name">Referring Provider</div>
-        <div class="field-value">Coming soon...</div>
+        <div class="field-value"><%= display_field(@extracted_fields[:referring_provider]) %></div>
       </div>
-      <div class="field-placeholder">
+      
+      <div class="field-card <%= field_status(@extracted_fields[:referral_reason]) %>">
         <div class="field-icon">📋</div>
         <div class="field-name">Referral Reason</div>
-        <div class="field-value">Coming soon...</div>
+        <div class="field-value"><%= display_field(@extracted_fields[:referral_reason]) %></div>
       </div>
-      <div class="field-placeholder">
+      
+      <div class="field-card <%= field_status(@extracted_fields[:notes_comments]) %>">
         <div class="field-icon">📝</div>
         <div class="field-name">Notes/Comments</div>
-        <div class="field-value">Coming soon...</div>
+        <div class="field-value"><%= display_field(@extracted_fields[:notes_comments]) %></div>
       </div>
     </div>
+    
+    <% if @extracted_fields[:confidence].present? %>
+      <div class="confidence-meter">
+        <span class="label">Extraction Confidence:</span>
+        <span class="confidence-badge confidence-<%= @extracted_fields[:confidence] %>">
+          <%= @extracted_fields[:confidence].upcase %>
+        </span>
+      </div>
+    <% end %>
   </div>
 
   <div class="actions">
@@ -188,38 +216,83 @@
     color: #64748b;
   }
 
-  .phase2-preview {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  .ai-extraction-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
     border-radius: 12px;
     padding: 30px;
     margin-bottom: 20px;
-    border: 2px dashed #0284c7;
+    border: 2px solid #10b981;
   }
 
-  .phase2-preview h3 {
-    color: #0c4a6e;
-    margin-bottom: 10px;
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .section-header h3 {
+    color: #065f46;
+    margin: 0;
     font-size: 1.3rem;
   }
 
-  .phase2-preview p {
-    color: #475569;
-    margin-bottom: 25px;
+  .badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .badge-ai {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: white;
+  }
+
+  .badge-basic {
+    background: #94a3b8;
+    color: white;
+  }
+
+  .extraction-notes {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    color: #92400e;
   }
 
   .fields-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 15px;
+    margin-bottom: 20px;
   }
 
-  .field-placeholder {
+  .field-card {
     background: white;
     border-radius: 8px;
     padding: 20px;
     text-align: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    opacity: 0.7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    border: 2px solid transparent;
+  }
+
+  .field-card.field-found {
+    border-color: #10b981;
+    background: #f0fdf4;
+  }
+
+  .field-card.field-empty {
+    opacity: 0.6;
+    border-color: #e5e7eb;
+  }
+
+  .field-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
   .field-icon {
@@ -230,14 +303,58 @@
   .field-name {
     font-weight: 600;
     color: #1e293b;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-size: 0.9rem;
   }
 
   .field-value {
+    color: #059669;
+    font-size: 0.95rem;
+    font-weight: 500;
+    word-wrap: break-word;
+  }
+
+  .field-value em.not-found {
     color: #94a3b8;
-    font-size: 0.85rem;
     font-style: italic;
+    font-weight: normal;
+  }
+
+  .confidence-meter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+  }
+
+  .confidence-meter .label {
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .confidence-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .confidence-high {
+    background: #10b981;
+    color: white;
+  }
+
+  .confidence-medium {
+    background: #f59e0b;
+    color: white;
+  }
+
+  .confidence-low {
+    background: #ef4444;
+    color: white;
   }
 
   .actions {
@@ -268,4 +385,3 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 </style>
-

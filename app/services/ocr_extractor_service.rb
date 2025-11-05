@@ -12,7 +12,7 @@ class OcrExtractorService
     case @file_extension
     when ".pdf"
       extract_from_pdf
-    when '.jpg', '.jpeg', '.png', '.tiff', '.bmp'
+    when ".jpg", ".jpeg", ".png", ".tiff", ".bmp"
       extract_from_image
     else
       "Unsupported file format: #{@file_extension}"
@@ -21,23 +21,12 @@ class OcrExtractorService
 
   private
 
-  def extract_from_pdf
-    # Try to extract text directly from PDF first (for text-based PDFs)
-    text = extract_text_from_pdf
-
-    # If no text found, it might be a scanned PDF - use OCR
-    if text.strip.empty?
-      text = extract_from_scanned_pdf
-    end
-
-    text
-  end
-
   def extract_text_from_pdf
     reader = PDF::Reader.new(@file_path)
     text = ""
 
-    reader.pages.each do |page|
+    reader.pages.each_with_index do |page, index|
+      text += "\n\n=== PAGE #{index + 1} ===\n\n" if reader.pages.length > 1
       text += page.text
     end
 
@@ -47,16 +36,32 @@ class OcrExtractorService
     ""
   end
 
-  def extract_from_scanned_pdf
-    # Convert PDF pages to images and run OCR on each
+  def extract_from_pdf
+    # Convert PDF pages to images and run OCR on each page
     text = ""
 
-    # Convert first page for now (can extend to all pages)
-    image_path = convert_pdf_to_image(@file_path)
+    begin
+      # Get total number of pages
+      pdf = MiniMagick::Image.open(@file_path)
+      total_pages = pdf.pages.length
 
-    if image_path
-      text = RTesseract.new(image_path).to_s
-      File.delete(image_path) if File.exist?(image_path)
+      Rails.logger.info "Processing #{total_pages} pages from PDF"
+
+      # Process each page
+      (0...total_pages).each do |page_num|
+        Rails.logger.info "Extracting text from page #{page_num + 1}/#{total_pages}"
+
+        image_path = convert_pdf_page_to_image(@file_path, page_num)
+
+        if image_path
+          page_text = RTesseract.new(image_path).to_s
+          text += "\n\n=== PAGE #{page_num + 1} ===\n\n" + page_text
+          File.delete(image_path) if File.exist?(image_path)
+        end
+      end
+    rescue => e
+      Rails.logger.error "Error processing PDF pages: #{e.message}"
+      return "Error: #{e.message}"
     end
 
     text
@@ -73,17 +78,25 @@ class OcrExtractorService
     "Error: #{e.message}"
   end
 
-  def convert_pdf_to_image(pdf_path)
-    # Convert first page of PDF to image using MiniMagick
-    output_path = pdf_path.sub(".pdf", "_page1.png")
+  def convert_pdf_page_to_image(pdf_path, page_num = 0)
+    # Convert specific page of PDF to image
+    output_path = pdf_path.sub(".pdf", "_page#{page_num}.png")
 
-    image = MiniMagick::Image.open(pdf_path)
-    image.format "png"
-    image.write output_path
+    # Use system command for ImageMagick convert
+    # Escape the path properly and specify the page
+    input_spec = "#{pdf_path}[#{page_num}]"
 
-    output_path
+    # Run ImageMagick convert command
+    system("convert", "-density", "300", input_spec, output_path)
+
+    if File.exist?(output_path)
+      output_path
+    else
+      Rails.logger.error "Failed to create image for page #{page_num}"
+      nil
+    end
   rescue => e
-    Rails.logger.error "Error converting PDF to image: #{e.message}"
+    Rails.logger.error "Error converting PDF page #{page_num} to image: #{e.message}"
     nil
   end
 end
